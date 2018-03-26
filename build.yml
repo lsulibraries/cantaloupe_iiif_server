@@ -1,0 +1,11 @@
+- hosts: all
+  become: yes
+  ## Need python2 on the target host:
+  ## https://stackoverflow.com/questions/32429259/ansible-fails-with-bin-sh-1-usr-bin-python-not-found/34402816#34402816
+  gather_facts: false
+  pre_tasks:
+    - name: 'install python2'
+      raw: sudo apt-get -y install python-simplejson
+  gather_facts: true
+  roles:
+    - ansible_cantaloupe
