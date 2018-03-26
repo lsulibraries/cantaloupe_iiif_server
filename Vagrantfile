@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.55.55"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -74,10 +74,18 @@ Vagrant.configure("2") do |config|
   require 'rbconfig'
   is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
   if is_windows
+    config.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      apt-get install -y python
+    SHELL
     config.vm.provision "ansible_local" do |ansible|
       ansible.playbook = "build.yml"
       ansible.verbose = 'vv'
       ansible.install = true
+    end
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "run.yml"
+      ansible.verbose = 'vv'
     end
   else
     config.vm.provision "shell", inline: <<-SHELL
@@ -86,6 +94,10 @@ Vagrant.configure("2") do |config|
     SHELL
     config.vm.provision "ansible" do |ansible|
       ansible.playbook = "build.yml"
+      ansible.verbose = 'vv'
+    end
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "run.yml"
       ansible.verbose = 'vv'
     end
   end
