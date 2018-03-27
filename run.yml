@@ -4,8 +4,9 @@
   tasks:
     - name: Kill any running instance first.
       shell: killall java
+      ignore_errors: yes
 
     - name: start cantaloupe
-      shell: "(sudo -u cantaloupe nohup java -Dcantaloupe.config=/opt/cantaloupe/cantaloupe.properties -Xmx7g -jar Cantaloupe-{{ cantaloupe_version }}.war >/dev/null 2>&1 &)"
+      shell: "(sudo -u cantaloupe nohup java -Dcantaloupe.config=/opt/cantaloupe/cantaloupe.properties -Xmx{{ cantaloupe_Xmx }} -jar Cantaloupe-{{ cantaloupe_version }}.war >/dev/null 2>&1 &)"
       args:
         chdir: /opt/cantaloupe
